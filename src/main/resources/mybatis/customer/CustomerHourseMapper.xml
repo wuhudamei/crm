@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.customer.CustomerHouseDao">
+    <resultMap id="customerResultMap" type="CustomerHouse">
+        <id column="id" property="id"/>
+        <result column="customer_no" property="customerNo"/>
+        <result column="task_no" property="taskNo"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="house_layout" property="houseLayout"/>
+        <result column="house_area" property="houseArea"/>
+        <result column="house_type" property="houseType"/>
+        <result column="hoursing" property="hoursing"/>
+        <result column="elevator" property="elevator"/>
+        <result column="renovation_time" property="renovationTime"/>
+        <result column="province_code" property="provinceCode"/>
+        <result column="province_name" property="provinceName"/>
+        <result column="city_code" property="cityCode"/>
+        <result column="city_name" property="cityName"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="area_name" property="areaName"/>
+        <result column="address" property="address"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_order_time" property="createOrderTime"/>
+    </resultMap>
+    
+    <sql id="customerHouseSql">
+        id, customer_no, task_no, order_num, order_id, order_status,house_layout, house_area, house_type, hoursing, elevator, renovation_time, province_code,
+        province_name, city_code, city_name, area_code, area_name, address, create_time, create_user, create_order_time
+    </sql>
+    <!--插入房屋信息-->
+    <insert id="insert" parameterType="CustomerHouse" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO crm_customer_house
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="customerNo != null">
+              customer_no,
+          </if>
+          <if test="taskNo != null">
+              task_no,
+          </if>
+          <if test="orderNum != null">
+              order_num,
+          </if>
+          <if test="orderId != null">
+              order_id,
+          </if>
+          <if test="orderStatus != null">
+              order_status,
+          </if>
+          <if test="houseLayout != null">
+              house_layout,
+          </if>
+          <if test="houseArea != null">
+              house_area,
+          </if>
+          <if test="houseType != null">
+              house_type,
+          </if>
+          <if test="hoursing != null">
+              hoursing,
+          </if>
+          <if test="elevator != null">
+              elevator,
+          </if>
+          <if test="renovationTime != null">
+              renovation_time,
+          </if>
+          <if test="provinceCode != null">
+              province_code,
+          </if>
+          <if test="provinceName != null">
+              province_name,
+          </if>
+          <if test="cityCode != null">
+              city_code,
+          </if>
+          <if test="cityName != null">
+              city_name,
+          </if>
+          <if test="areaCode != null">
+              area_code,
+          </if>
+          <if test="areaName != null">
+              area_name,
+          </if>
+          <if test="address != null">
+              address,
+          </if>
+          <if test="createTime != null">
+              create_time,
+          </if>
+          <if test="createUser != null">
+              create_user,
+          </if>
+          <if test="createOrderTime != null">
+              create_order_time
+          </if>
+        </trim>
+        <trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+            <if test="customerNo != null">
+                #{customerNo},
+            </if>
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="orderNum != null">
+                #{orderNum},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus},
+            </if>
+            <if test="houseLayout != null">
+                #{houseLayout},
+            </if>
+            <if test="houseArea != null">
+                #{houseArea},
+            </if>
+            <if test="houseType != null">
+                #{houseType},
+            </if>
+            <if test="hoursing != null">
+                #{hoursing},
+            </if>
+            <if test="elevator != null">
+                #{elevator},
+            </if>
+            <if test="renovationTime != null">
+                #{renovationTime},
+            </if>
+            <if test="provinceCode != null">
+                #{provinceCode},
+            </if>
+            <if test="provinceName != null">
+                #{provinceName},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode},
+            </if>
+            <if test="cityName != null">
+                #{cityName},
+            </if>
+            <if test="areaCode != null">
+                #{areaCode},
+            </if>
+            <if test="areaName != null">
+                #{areaName},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="createUser != null">
+                #{createUser},
+            </if>
+            <if test="createOrderTime != null">
+                #{createOrderTime}
+            </if>
+        </trim>
+    </insert>
+    <!--更新房屋信息-->
+    <update id="update" parameterType="CustomerHouse">
+        UPDATE crm_customer_house
+        <set>
+            <if test="customerNo != null">
+                customer_no = #{customerNo},
+            </if>
+            <if test="taskNo != null">
+                task_no = #{taskNo},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="houseLayout != null">
+                house_layout = #{houseLayout},
+            </if>
+            <if test="houseArea != null">
+                house_area = #{houseArea},
+            </if>
+            <if test="houseType != null">
+                house_type = #{houseType},
+            </if>
+            <if test="hoursing != null">
+                hoursing = #{hoursing},
+            </if>
+            <if test="elevator != null">
+                elevator = #{elevator},
+            </if>
+            <if test="renovationTime != null">
+                renovation_time = #{renovationTime},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode},
+            </if>
+            <if test="provinceName != null">
+                province_name = #{provinceName},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode},
+            </if>
+            <if test="cityName != null">
+                city_name = #{cityName},
+            </if>
+            <if test="areaCode != null">
+                area_code = #{areaCode},
+            </if>
+            <if test="areaName != null">
+                area_name = #{areaName},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="createOrderTime != null">
+                create_order_time = #{createOrderTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!--根据ID查找-->
+    <select id="getById" parameterType="long" resultMap="customerResultMap">
+        SELECT
+         <include refid="customerHouseSql" />
+        FROM crm_customer_house WHERE id = #{id}
+    </select>
+
+    <select id="findByTaskNo" resultMap="customerResultMap">
+        SELECT
+        <include refid="customerHouseSql" />
+        FROM crm_customer_house WHERE task_no = #{taskNo}
+    </select>
+
+    <select id="findOrderListByTaskNo" resultMap="customerResultMap">
+        SELECT
+        <include refid="customerHouseSql" />
+        FROM crm_customer_house WHERE order_num IS NOT NULL and task_no = #{taskNo}
+    </select>
+    
+    <!-- 带条件/分页 的查询所有 -->
+	<select id="search" parameterType="map" resultMap="customerResultMap">
+		SELECT
+		<include refid="customerHouseSql" />
+		FROM crm_customer_house 
+		<where>
+            1=1
+			<if test="customerNo != null">
+				and customer_no = #{customerNo}
+			</if>
+            <if test="orderNo != null">
+                and order_num = #{orderNo}
+            </if>
+		</where>
+		<if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+	</select>
+    
+    <!-- 通过客户编码 查询房屋信息列表 -->
+	<select id="findCustomerHouseByCustomerNo" parameterType="String" resultMap="customerResultMap">
+		SELECT customer_no,order_num
+		FROM crm_customer_house WHERE customer_no = #{customerNo}
+	</select>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM crm_customer_house WHERE id = #{id}
+    </delete>
+
+    <!--通过订单ID更新状态-->
+    <update id="updateOrderStatusByOrderId">
+        UPDATE crm_customer_house set order_status = #{status} where order_id = #{orderId}
+    </update>
+
+    <!--根据任务号列表查询订单号-->
+    <select id="findOrderNoByTaskNoList" resultType="map">
+        SELECT task_no as taskNo, order_num as orderNum from crm_customer_house
+        WHERE
+        order_num is NOT NULL and
+        <foreach collection="taskNoList" item="taskNo" open="(" close=")" separator=",">
+            #{taskNo}
+        </foreach>
+    </select>
+</mapper>

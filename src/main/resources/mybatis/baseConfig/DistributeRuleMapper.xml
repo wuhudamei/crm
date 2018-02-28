@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 派发规则Mapper -->
+<mapper namespace="com.rocoinfo.repository.basicConfig.DistributeRuleDao">
+	
+	<resultMap id="BaseResultMap" type="DistributeRule">
+		<id column="id" property="id" />
+		<result column="distribute_rule_code" property="code" />
+		<result column="distribute_rule_name" property="name" />
+		<result column="description" property="description" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="SelectInfo">
+		id, distribute_rule_code, distribute_rule_name, description, status,
+		create_time
+	</sql>
+	
+	<select id="getByStatus" resultMap="BaseResultMap">
+		select
+		<include refid="SelectInfo" />
+		from crm_distribute_rule where status = '1'
+	</select>
+	
+	<select id="getById" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="SelectInfo" />
+		from crm_distribute_rule
+		where id = #{id}
+	</select>
+	<select id="getByCode" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="SelectInfo" />
+		from crm_distribute_rule
+		where distribute_rule_code = #{distribute_rule_code}
+	</select>
+
+	<!-- 查询所有,并按id降序 -->
+	<select id="findAll" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="SelectInfo" />
+		from crm_distribute_rule order by id desc
+	</select>
+
+	<!-- 通过id更新 -->
+	<update id="update" parameterType="DistributeRule">
+		update crm_distribute_rule
+		<set>
+			<if test="code != null">
+				distribute_rule_code = #{code},
+			</if>
+			<if test="name != null">
+				distribute_rule_name = #{name},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 启用当前/禁用其他 -->
+	<update id="EnableStatusAndDisableOthers" parameterType="DistributeRule">
+		update crm_distribute_rule
+		set status = "0"
+		where id != #{id};
+		
+		update crm_distribute_rule
+		set status = #{status}
+		where id = #{id};
+	</update>
+	
+	<!-- 带条件/分页 的查询所有 -->
+	<select id="search" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="SelectInfo" />
+		from crm_distribute_rule 
+		<include refid="searchWhere" />
+		<if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+	</select>
+
+	<select id="searchTotal" parameterType="map" resultType="Long">
+		SELECT
+		COUNT(*)
+		FROM crm_distribute_rule
+		<include refid="searchWhere" />
+	</select>
+
+	<delete id="deleteById" parameterType="long">
+		delete from crm_distribute_rule
+		where id = #{id}
+	</delete>
+	
+	<insert id="insert" keyProperty="id" parameterType="DistributeRule" useGeneratedKeys="true">
+        insert into crm_distribute_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                distribute_rule_code,
+            </if>
+            <if test="name != null">
+                distribute_rule_name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+    
+	<sql id="searchWhere">
+		<where>
+			<if test="name != null">
+				distribute_rule_name LIKE CONCAT('%', #{name}, '%') 
+			</if>
+		</where>
+	</sql>
+</mapper>

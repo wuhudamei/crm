@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.customer.ReturnOrderDao">
+    <resultMap id="ReturnOrderResultMap" type="com.rocoinfo.entity.customer.ReturnOrder">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="task_no" property="taskNo"/>
+        <result column="back_reason" property="backReason"/>
+        <result column="back_remark" property="backRemark"/>
+        <result column="debit_amount" property="debitAmount"/>
+        <result column="amount" property="amount"/>
+        <result column="store" property="store"/>
+        <result column="approval_result" property="approvalResult"/>
+        <result column="apply_no" property="applyNo"/>
+        <result column="apply_user" property="applyUser"/>
+        <result column="apply_user_name" property="applyUserName"/>
+        <result column="approval_user" property="approvalUser"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="approval_time" property="approvalTime"/>
+        <result column="apply_title" property="applyTitle"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_mobile" property="customerMobile"/>
+
+        <result column="province_name" property="provinceName"/>
+        <result column="city_name" property="cityName"/>
+        <result column="area_name" property="areaName"/>
+        <result column="address" property="address"/>
+
+    </resultMap>
+
+    <sql id="detailSql">
+        cro.id, cro.order_id, cro.task_no, cro.back_reason, cro.back_remark
+        , cro.debit_amount, cro.amount, cro.store,
+        approval_result, cro.apply_no, cro.apply_user, ce.emp_name as apply_user_name,
+        cro.approval_user, cro.apply_time, cro.approval_time, cro.apply_title
+        ,cc.customer_name, cc.customer_mobile
+        ,cch.province_name, cch.city_name, cch.area_name, cch.address
+    </sql>
+
+    <select id="findDetailByApplyNo" resultMap="ReturnOrderResultMap">
+        SELECT
+        <include refid="detailSql" />
+        FROM crm_return_order cro
+        LEFT JOIN crm_employee ce ON cro.apply_user = ce.job_num
+        left join crm_task_distribute td on cro.task_no = td.task_no
+        left join crm_customer cc on cc.customer_no = td.customer_no
+        left join crm_customer_house cch on cro.order_id = cch.order_id
+        WHERE apply_no = #{applyNo}
+    </select>
+
+    <select id="getById" parameterType="long" resultMap="ReturnOrderResultMap">
+        SELECT id, order_id, task_no, back_reason, back_remark, debit_amount, amount, store, approval_result, apply_no,
+            apply_user, approval_user, apply_time, approval_time, apply_title
+        FROM crm_return_order
+        where id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ReturnOrder">
+        INSERT INTO crm_return_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="taskNo != null">
+                task_no,
+            </if>
+            <if test="backReason != null">
+                back_reason,
+            </if>
+            <if test="backRemark != null">
+                back_remark,
+            </if>
+            <if test="debitAmount != null">
+                debit_amount,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="store != null">
+                store,
+            </if>
+            <if test="approvalResult != null">
+                approval_result,
+            </if>
+            <if test="applyNo != null">
+                apply_no,
+            </if>
+            <if test="applyUser != null">
+                apply_user,
+            </if>
+            <if test="approvalUser != null">
+                approval_user,
+            </if>
+            <if test="applyTime != null">
+                apply_time,
+            </if>
+            <if test="approvalTime != null">
+                approval_time,
+            </if>
+            <if test="applyTitle != null">
+                apply_title
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="backReason != null">
+                #{backReason},
+            </if>
+            <if test="backRemark != null">
+                #{backRemark},
+            </if>
+            <if test="debitAmount != null">
+                #{debitAmount},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="store != null">
+                #{store},
+            </if>
+            <if test="approvalResult != null">
+                #{approvalResult},
+            </if>
+            <if test="applyNo != null">
+                #{applyNo},
+            </if>
+            <if test="applyUser != null">
+                #{applyUser},
+            </if>
+            <if test="approvalUser != null">
+                #{approvalUser},
+            </if>
+            <if test="applyTime != null">
+                #{applyTime},
+            </if>
+            <if test="approvalTime != null">
+                #{approvalTime},
+            </if>
+            <if test="applyTitle != null">
+                #{applyTitle}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="ReturnOrder">
+      UPDATE crm_return_order
+      <set>
+          <if test="orderId != null">
+            order_id = #{orderId },
+          </if>
+          <if test="taskNo != null">
+              task_no = #{taskNo },
+          </if>
+          <if test="backReason != null">
+            back_reason = #{backReason },
+          </if>
+          <if test="backRemark != null">
+              back_remark = #{backRemark },
+          </if>
+          <if test="debitAmount != null">
+              debit_amount = #{debitAmount },
+          </if>
+          <if test="amount != null">
+              amount = #{amount },
+          </if>
+          <if test="store != null">
+              store = #{store },
+          </if>
+          <if test="approvalResult != null">
+              approval_result = #{approvalResult },
+          </if>
+          <if test="applyNo != null">
+              apply_no = #{applyNo },
+          </if>
+          <if test="applyUser != null">
+              apply_user = #{applyUser },
+          </if>
+          <if test="approvalUser != null">
+              approval_user = #{approvalUser },
+          </if>
+          <if test="applyTime != null">
+              apply_time = #{applyTime },
+          </if>
+          <if test="approvalTime != null">
+              approval_time = #{approvalTime },
+          </if>
+          <if test="applyTitle != null">
+              apply_title = #{applyTitle }
+          </if>
+      </set>
+      WHERE id = #{id}
+    </update>
+
+</mapper>

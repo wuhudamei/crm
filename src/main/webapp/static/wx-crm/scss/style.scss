@@ -1,0 +1,172 @@
+@import "partials/reset";
+@import "partials/variables";
+li{
+    list-style: none;
+}
+html, body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.wrap{
+    background: #eee;
+    height: 100%;
+    display:flex;
+    flex-flow:column;
+}
+.content{
+    position:relative;
+    flex:1;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-top: 10px;
+}
+header{
+    height: 45px;
+    background: #fff;
+    h3{
+        width: 100%;
+        text-align: center;
+        line-height: 43px;
+        border-bottom:green 2px solid;
+        font-weight: normal;
+        font-size: 20px;
+    }
+}
+footer{
+    height: 55px;
+    overflow: hidden;
+    background:#fff;
+    border-top:1px solid #999 !important;
+    .foot-nav{
+        height: 55px;
+    }
+}
+.foot-list a{
+    display: block;
+    color: #333;
+    text-align: center;
+}
+.foot-list a .groups{
+    width: 30px;
+    height: 30px;
+    background: url("../img/groups.png");
+    background-size: 200% 100%;
+    display: inline-block;
+}
+.foot-list a .schedule{
+    width: 30px;
+    height: 30px;
+    background: url("../img/schedule.png");
+    background-size: 200% 100%;
+    display: inline-block;
+}
+.foot-list a .upstage{
+    width: 30px;
+    height: 30px;
+    background: url("../img/upstage.png");
+    background-size: 200% 100%;
+    display: inline-block;
+}
+.foot-list a .on{
+    background-position: -100% 0;
+}
+.loading{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left:0;
+    top:0;
+    background: rgba(0,0,0,0);
+    z-index: 998;
+    p{
+        position: fixed;
+        width: 150px;
+        height: 100px;
+        left: 50%;
+        top:50%;
+        margin-left: -75px;
+        margin-top:-50px;
+        background: rgba(0,0,0,0.7);
+        border-radius: 4px;
+        text-align: center;
+        color: #fff;
+        z-index: 999;
+        img{
+            width: 64px;
+            height: 64px;
+            margin-top:8px;
+        }
+    }
+    &.hidden{
+        display: none;
+    }
+}
+.tanboxbg{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left:0;
+    top:0;
+    background: rgba(0,0,0,0.7);
+    &.hidden{
+        display: none;
+    }
+    .tanbox{
+        width: 300px;
+        position: fixed;
+        left: 50%;
+        top:20%;
+        margin-left: -150px;
+        background: #fff;
+        border-radius: 5px;
+        padding:20px 10px;
+        // padding-bottom: 0;
+        max-height: 400px;
+        overflow-y: scroll;
+        li{
+            line-height: 40px;
+            border-top: 1px solid #eee;
+        }
+    }
+
+}
+.margin0 {
+  margin: 0;
+}
+.scroller-wrapper {
+  max-height: 100%;
+  height: auto !important;
+}
+.bg-gray {
+  background-color: #ddd;
+  padding:10px 5px
+}
+.text-red {
+  color: #fa4545 !important;
+}
+.border-none {
+  border:none;
+  margin-right: 6px !important
+}
+.text-bold {
+  font-weight: bold !important
+}
+.text-normal {
+  font-weight: normal !important
+}
+.text-blank {
+  height: 56px;
+  line-height: 56px;
+  text-align: center;
+  background-color: #fff
+}
+[v-cloak] {
+  display: none;
+}
+@import "components/form";
+@import "components/icon";
+@import "components/tab";
+
+@import "modules/customer";
+ @import "modules/mine";

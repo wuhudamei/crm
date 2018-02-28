@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.schedule.ScheduleDao">
+    <resultMap id="BaseResultMap" type="Schedule">
+        <id column="id" property="id" />
+        <result column="task_no" property="taskNo" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="schedule_time" property="scheduleTime" />
+        <result column="schedule_type" property="scheduleType" />
+        <result column="generate_model" property="generateModel" />
+        <result column="job_num" property="jobNum" />
+        <result column="create_time" property="createTime" />
+        <result column="scheduleNum" property="scheduleNum" />
+    </resultMap>
+
+    <sql id="SelectInfo">
+    id,task_no, title, content, schedule_time, schedule_type, generate_model, create_time, job_num
+    </sql>
+
+    <insert id="insert" parameterType="Schedule" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO crm_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskNo != null">
+                task_no,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+              content,
+            </if>
+            <if test="scheduleTime != null">
+                schedule_time,
+            </if>
+            <if test="scheduleType != null">
+                schedule_type,
+            </if>
+            <if test="generateModel != null">
+                generate_model,
+            </if>
+            <if test="jobNum != null">
+                job_num,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="scheduleTime != null">
+                #{scheduleTime},
+            </if>
+            <if test="scheduleType != null">
+                #{scheduleType},
+            </if>
+            <if test="generateModel != null">
+                #{generateModel},
+            </if>
+            <if test="jobNum != null">
+                #{jobNum},
+            </if>
+            <if test="createTime != null">
+                #{createTime}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SelectInfo" />
+        FROM crm_schedule
+        WHERE id = #{id}
+    </select>
+
+    <select id="search" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SelectInfo"/>
+        FROM crm_schedule
+        WHERE 1=1
+        <include refid="searchWhere"/>
+        <if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+    </select>
+    
+    <select id="findScheduleByDate" resultMap="BaseResultMap">
+    	SELECT distinct job_num,schedule_type,count(schedule_type) scheduleNum FROM crm_schedule where schedule_time like CONCAT(#{date},'%') group by schedule_type
+    </select>
+    
+    <sql id="searchWhere">
+       AND job_num=#{jobNum}
+       <if test="startTime !=null and startTime != '' and endTime != null and endTime != '' ">
+      	 AND schedule_time BETWEEN #{startTime} AND #{endTime}
+       </if>
+    </sql>
+
+    <!--删除该任务该客服当天以后的日程提醒-->
+    <delete id="deleteAfterNow">
+        DELETE from crm_schedule where job_num = #{jobNum} and task_no = #{taskNo} and schedule_time > #{now}
+    </delete>
+
+</mapper>

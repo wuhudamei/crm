@@ -1,0 +1,48 @@
+.mine-person{
+    h5{
+        text-align: center;
+        margin-bottom: 5px;
+    }
+}
+//日程
+.schedule-text{
+    span{
+        background: green;
+        color: #fff;
+        padding:2px;
+        margin-right: 5px;
+        &.red{
+            background: red;
+        }
+    }
+    i{
+        float: right;
+        font-style: normal;
+        color: #ccc;
+        &.red{
+            color: red;
+        }
+    }
+}
+.schedule-title{
+    margin-top:10px;
+    width:100%; 
+    white-space:nowrap; 
+    overflow:hidden; 
+    text-overflow:ellipsis;
+}
+.sd-content{
+    background: #fff;
+    h4{
+        padding:10px 0;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+        line-height: 30px;
+    }
+    .cd-text{
+        margin: 10px 0;
+        p{
+            text-indent: 25px;
+        }
+    }
+}

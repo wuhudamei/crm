@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.employee.EmployeeOrderSourceDao">
+    <resultMap id="BaseResultMap" type="EmployeeOrderSource">
+        <id column="id"  property="id" />
+        <result column="job_num"  property="jobNum" />
+        <result column="order_source"  property="orderSource" />
+        <result column="orderSourceName"  property="orderSourceName" />
+        <result column="create_time"  property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="sort" property="sort" />
+        <result column="store_code" property="storeCode" />
+        <result column="checked" property="checked" />
+        <result column="auto_order" property="autoOrder"/>
+        <result column="busy_threshold" property="busyThreshold"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, job_num, order_source, create_time, create_user
+    </sql>
+    <!--查一个-->
+    <select id="getById"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from crm_employee_order_source
+        where id = #{id}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from crm_employee_order_source
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="EmployeeOrderSource" useGeneratedKeys="true" keyProperty="id">
+        insert into crm_employee_order_source (job_num, order_source,
+        create_time, create_user)
+        values ( #{jobNum}, #{orderSource},
+        #{createTime}, #{createUser})
+    </insert>
+    <!--批量添加-->
+    <insert id="insertBatch"  >
+        insert into crm_employee_order_source
+            (job_num,order_source,create_time,create_user)
+        VALUES
+        <foreach collection="orderSourceList" item="item" separator=",">
+            (#{jobNum},#{item.orderSource}, #{createTime},#{createUser})
+        </foreach>
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="EmployeeOrderSource">
+        update crm_employee_order_source
+        <set>
+            <if test="jobNum != null">
+                job_num = #{jobNum},
+            </if>
+            <if test="orderSource != null">
+                order_source = #{orderSource},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!--根据 员工编号删除 接单来源-->
+    <delete id="deleteByJobNum">
+        delete from crm_employee_order_source
+        where job_num = #{jobNum}
+    </delete>
+    <!--根据员工编号获取 接单来源列表  查询数据字典表 -->
+    <select id="findDataOrderSourceByEmpJobNum" resultMap="BaseResultMap">
+        SELECT
+            cd.dic_code AS order_source,
+            cd.dic_name AS  orderSourceName,
+            CASE
+        WHEN ceo.id IS NOT NULL THEN
+            'true'
+        ELSE
+            'false'
+        END AS checked
+        FROM
+            crm_dictionary cd
+        JOIN crm_dictionary cdd ON cd.parent_dic_id = cdd.id
+        LEFT JOIN (
+            SELECT
+                id,
+                order_source
+            FROM
+                crm_employee_order_source
+            WHERE
+                job_num = #{jobNum}
+        ) ceo ON ceo.order_source = cd.dic_code
+        WHERE
+            cdd.dic_code = #{dicCode}
+    </select>
+    
+    <!--根据员工编号获取 接单来源列表  查询数据来源表  -->
+    <select id="findDataOrderSourceByEmpJobNumWithDataSource" resultMap="BaseResultMap">
+        SELECT
+        dataSource.source_code AS order_source,
+        dataSource.source_name AS  orderSourceName,
+        CASE
+        WHEN orderSource.id IS NOT NULL THEN
+            'true'
+        ELSE
+            'false'
+        END AS checked
+        FROM
+            crm_data_source dataSource
+        LEFT JOIN 
+	    	crm_employee_order_source orderSource
+        ON 
+	    	orderSource.order_source = dataSource.source_code
+        	AND orderSource.job_num = #{jobNum}
+    </select>
+    
+    <select id="findOrderSourceList" resultMap="BaseResultMap">
+        select ceos.id, ceos.job_num, ceos.order_source, ceos.create_time,
+        ceos.create_user,
+        ce.sort ,ce.store_code,ce.auto_order,ce.busy_threshold
+        from crm_employee_order_source ceos
+        left join crm_employee ce on ceos.job_num=ce.job_num
+			WHERE ce.`status`='1' AND ISNULL(store_code)=0
+        ORDER BY ce.sort asc,ceos.job_num asc
+    </select>
+    <!-- 查询数据来源表 -->
+    <select id="findDataOrderSourceByJobNum" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM crm_employee_order_source
+        WHERE job_num = #{jobNum}
+    </select>
+
+
+    <select id="selectEmployeeInfoWithStoreAndSource" resultType="java.util.Map">
+        SELECT cm.store_code as storeId,cm.job_num as serviceId,cm.emp_name as customerServiceName,cm.mobile as customerServiceMobile,cm.status as isLeave
+         FROM crm_employee cm LEFT JOIN crm_employee_order_source cmos on cm.job_num=cmos.job_num
+        where cm.store_code in
+        <foreach collection="storeCodes" index="idx" item="storeCode" open="(" separator="," close=")">
+            #{storeCode}
+        </foreach>
+        and cmos.order_source in
+        <foreach collection="sourceCodes" index="idx" item="sourceCode" open="(" separator="," close=")">
+            #{sourceCode}
+        </foreach>
+    </select>
+</mapper>

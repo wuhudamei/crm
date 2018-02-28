@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.task.DistributeRmkDao">
+   <!--添加-->
+    <insert id="insert" parameterType="DistributeRmk">
+        insert into crm_distribute_rmk ( task_no, old_mechandiser,
+        distribute_mechandiser, type, create_time,
+        create_user)
+        values ( #{taskNo}, #{oldMechandiser},
+        #{distributeMechandiser}, #{type}, #{createTime},
+        #{createUser})
+    </insert>
+
+    <select id="getLatestStateOfTask" resultType="DistributeRmk" >
+            SELECT
+                id,
+                task_no,
+                old_mechandiser,
+                distribute_mechandiser,
+                type,
+                create_time,
+                create_user
+            FROM
+                crm_distribute_rmk
+            WHERE
+                task_no = #{taskNo}
+            ORDER BY
+                create_time DESC
+            LIMIT 1
+    </select>
+</mapper>

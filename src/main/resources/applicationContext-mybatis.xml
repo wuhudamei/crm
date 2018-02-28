@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
+	default-lazy-init="true">
+
+	<!-- 导入properties文件 -->
+	<context:property-placeholder location="classpath*:/application.properties" />
+
+	<!-- 自动扫描package的位置 -->
+	<context:component-scan base-package="com.rocoinfo.repository" />
+
+
+	<!-- 扫描basePackage下所有以@Repository标识的 接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.rocoinfo.repository" />
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
+	</bean>
+
+	<!-- 事务管理器, Jdbc单数据源事务 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+
+	<!-- 配置数据源 -->
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<!-- Connection Pooling Info -->
+		<property name="maxActive" value="150" />
+		<property name="minIdle" value="0" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="testOnBorrow" value="true" />
+
+		<property name="testWhileIdle" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="validationQuery" value="select 1" />
+		<property name="timeBetweenEvictionRunsMillis" value="30000" />
+		<property name="initialSize" value="10" />
+		<property name="maxWait" value="3000" />
+		<!-- 180秒，也就是3分钟 -->
+		<property name="removeAbandonedTimeout" value="180" />
+		<property name="minEvictableIdleTimeMillis" value="30000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="logAbandoned" value="true" />
+	</bean>
+
+	<!-- 配置mybaties的sessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+		<property name="typeAliasesPackage" value="com.rocoinfo.entity" />
+		<!-- 扫描存放Mapping配置文件的目录 -->
+		<property name="mapperLocations" value="classpath*:mybatis/**/*Mapper.xml"></property>
+		<!-- 使用分页插件 PageHelper -->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<property name="properties">
+						<!--使用下面的方式配置参数，一行配置一个 -->
+						<!-- helperDialect=mysql：配置数据库方言为mysql -->
+						<!-- offsetAsPageNum=true：使用offset和limit进行分页 -->
+						<!-- rowBoundsWithCount=true：分页时进行count查询 -->
+						<value>
+							helperDialect=mysql
+							offsetAsPageNum=true
+							rowBoundsWithCount=true
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+</beans>

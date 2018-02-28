@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.callCentre.CallCentreDao">
+    
+    
+    <select id="queryCallInLogListByjlID" resultType="CustomerCallInLog"  parameterType="java.lang.String" >
+    	select * from crm_callin_log
+    	where JLID=#{jlid,jdbcType=VARCHAR}
+  	</select>
+
+
+	<insert id="insertCallInLog" parameterType="com.rocoinfo.entity.callCentre.CustomerCallInLog" >
+    	insert into crm_callin_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="jlid != null" >
+        JLID,
+      </if>
+      <if test="ivrsp != null" >
+        IVRSp,
+      </if>
+      <if test="callid != null" >
+        CallID,
+      </if>
+      <if test="starttime != null" >
+        StartTime,
+      </if>
+      <if test="endtime != null" >
+        EndTime,
+      </if>
+      <if test="startqtime != null" >
+        StartQTime,
+      </if>
+      <if test="endqtime != null" >
+        EndQTime,
+      </if>
+      <if test="servicetype != null" >
+        ServiceType,
+      </if>
+      <if test="caller != null" >
+        Caller,
+      </if>
+      <if test="agentid != null" >
+        AgentID,
+      </if>
+      <if test="agentext != null" >
+        AgentExt,
+      </if>
+      <if test="groupid != null" >
+        GroupID,
+      </if>
+      <if test="trunkcallee != null" >
+        TrunkCallee,
+      </if>
+      <if test="companyId != null" >
+        Company_Id,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="jlid != null" >
+        #{jlid,jdbcType=VARCHAR},
+      </if>
+      <if test="ivrsp != null" >
+        #{ivrsp,jdbcType=VARCHAR},
+      </if>
+      <if test="callid != null" >
+        #{callid,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null" >
+        #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null" >
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startqtime != null" >
+        #{startqtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endqtime != null" >
+        #{endqtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="servicetype != null" >
+        #{servicetype,jdbcType=INTEGER},
+      </if>
+      <if test="caller != null" >
+        #{caller,jdbcType=VARCHAR},
+      </if>
+      <if test="agentid != null" >
+        #{agentid,jdbcType=VARCHAR},
+      </if>
+      <if test="agentext != null" >
+        #{agentext,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null" >
+        #{groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="trunkcallee != null" >
+        #{trunkcallee,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

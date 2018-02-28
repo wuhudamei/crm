@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.employee.EmployeeOrderRewardDao">
+    <resultMap id="BaseResultMap" type="EmployeeOrderReward">
+        <id column="id" property="id"/>
+        <result column="job_no" property="jobNo"/>
+        <result column="reward_order_num" property="rewardOrderNum"/>
+        <result column="actual_num" property="actualNum"/>
+        <result column="reward_date" property="rewardDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+		id, job_no, reward_order_num, actual_num,reward_date,create_time,
+		create_user
+	</sql>
+    <!--列表查询-->
+    <select id="search" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM crm_employee_order_reward
+        <where>
+            1=1
+            <if test="jobNo != null">
+                AND job_no=#{jobNo}
+            </if>
+            <if test="rewardDate != null">
+                AND reward_date=#{rewardDate}
+            </if>
+        </where>
+        <if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+    </select>
+
+    <delete id="deleteById">
+		DELETE  FROM   crm_employee_order_reward
+		WHERE  id=#{id}
+	</delete>
+
+    <insert id="insert" parameterType="EmployeeOrderReward"
+            useGeneratedKeys="true" keyProperty="id">
+		insert into crm_employee_order_reward (job_no,
+		reward_order_num,reward_date,create_time,create_user)
+		values ( #{jobNo}, #{rewardOrderNum},#{rewardDate},#{createTime},
+		#{createUser})
+	</insert>
+
+    <select id="findAllByDate" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from crm_employee_order_reward where reward_date=#{rewardDate}
+    </select>
+
+    <update id="update" parameterType="EmployeeOrderReward">
+		update crm_employee_order_reward set actual_num=#{actualNum}
+		where job_no=#{jobNo} and reward_date=#{rewardDate}
+	</update>
+
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="employeeRewardList" item="item" index="index" open="" close="" separator=";">
+            update crm_employee_order_reward set actual_num=#{item.actualNum}
+            where job_no=#{item.jobNo} and reward_date=#{item.rewardDate}
+        </foreach>
+    </update>
+
+</mapper>

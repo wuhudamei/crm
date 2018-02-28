@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.customer.ContactsDao">
+    <resultMap id="contactsResultMap" type="Contacts">
+        <id column="id" property="id"/>
+        <result column="customer_no" property="customerNo"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="relationship" property="relationship"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!--联系人关联用户表查询  -->
+    <resultMap id="contactsWithEmployee" type="Contacts" extends="contactsResultMap">
+    	<!-- 用户 -->
+    	<association  property="createUser" javaType="Employee">
+    		<id column="empId" property="id"/>
+    		<result column="emp_name" property="empName"/>
+    	</association>
+    </resultMap>
+    
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM crm_contacts WHERE id = #{id}
+    </delete>
+
+    <select id="getContactsByCustomer" resultType="com.rocoinfo.entity.customer.Contacts">
+      SELECT id, customer_no, name, mobile, relationship, remark, create_time, create_user
+      FROM crm_contacts WHERE customer_no = #{customerNo}
+    </select>
+
+    <insert id="insert" parameterType="com.rocoinfo.entity.customer.Contacts" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO crm_contacts
+        <trim prefix="(" suffixOverrides="," suffix=")">
+          <if test="customerNo != null">
+              customer_no,
+          </if>
+          <if test="name != null">
+              name,
+          </if>
+          <if test="mobile != null">
+              mobile,
+          </if>
+          <if test="relationship != null">
+              relationship,
+          </if>
+          <if test="remark != null">
+              remark,
+          </if>
+          <if test="createTime != null">
+              create_time,
+          </if>
+          <if test="createUser != null">
+              create_user
+          </if>
+        </trim>
+        <trim prefix=" VALUES (" suffixOverrides="," suffix=")">
+            <if test="customerNo != null">
+                #{ customerNo },
+            </if>
+            <if test="name != null">
+                #{ name },
+            </if>
+            <if test="mobile != null">
+                #{ mobile },
+            </if>
+            <if test="relationship != null">
+                #{ relationship },
+            </if>
+            <if test="remark != null">
+                #{ remark },
+            </if>
+            <if test="createTime != null">
+                #{ createTime },
+            </if>
+            <if test="createUser != null">
+                #{ createUser.id }
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.rocoinfo.entity.customer.Contacts">
+        UPDATE crm_contacts
+        <set>
+            <if test="customerNo != null">
+                customer_no = #{ customerNo },
+            </if>
+            <if test="name != null">
+                name = #{ name },
+            </if>
+            <if test="mobile != null">
+                mobile = #{ mobile },
+            </if>
+            <if test="relationship != null">
+                relationship = #{ relationshp },
+            </if>
+            <if test="remark != null">
+                remark = #{ remark },
+            </if>
+            <if test="createTime != null">
+                create_time = #{ createTime },
+            </if>
+            <if test="createUser != null">
+                create_user = #{ createUser.id }
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 带条件/分页 的查询所有 -->
+	<select id="search" parameterType="map" resultMap="contactsWithEmployee">
+		SELECT
+			cont.id, cont.customer_no, cont.name, cont.mobile, cont.relationship, cont.remark, 
+			cont.create_time, emp.id empId, emp.emp_name
+		FROM crm_contacts cont
+		LEFT JOIN crm_employee emp
+		ON cont.create_user = emp.id 
+		<where>
+			<if test="customerNo != null">
+				cont.customer_no = #{customerNo} 
+			</if>
+		</where>
+		<if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+	</select>
+    
+</mapper>

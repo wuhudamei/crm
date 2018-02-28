@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.taskrules.TaskAllowautoRulesDao">
+  <resultMap id="BaseResultMap" type="TaskAllowautoRules">
+    <id column="id"  property="id" />
+    <result column="store_code"  property="storeCode" />
+    <result column="data_source_code"  property="dataSourceCode" />
+    <result column="promote_code"  property="promoteCode" />
+    <result column="creator_id"  property="creatorId" />
+    <result column="creator_name"  property="creatorName" />
+    <result column="create_time"  property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, store_code, data_source_code, promote_code, creator_id, creator_name, create_time
+  </sql>
+  <select id="getById"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_task_allowauto_rules
+    where id = #{id}
+  </select>
+  <delete id="deleteById" >
+    delete from crm_task_allowauto_rules
+    where id = #{id}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    insert into crm_task_allowauto_rules
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="storeCode != null">
+        store_code,
+      </if>
+      <if test="dataSourceCode != null">
+        data_source_code,
+      </if>
+      <if test="promoteCode != null">
+        promote_code,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="creatorName != null">
+        creator_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="storeCode != null">
+        #{storeCode},
+      </if>
+      <if test="dataSourceCode != null">
+        #{dataSourceCode},
+      </if>
+      <if test="promoteCode != null">
+        #{promoteCode},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId},
+      </if>
+      <if test="creatorName != null">
+        #{creatorName},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" >
+    update crm_task_allowauto_rules
+    <set>
+      <if test="storeCode != null">
+        store_code = #{storeCode},
+      </if>
+      <if test="dataSourceCode != null">
+        data_source_code = #{dataSourceCode},
+      </if>
+      <if test="promoteCode != null">
+        promote_code = #{promoteCode},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId},
+      </if>
+      <if test="creatorName != null">
+        creator_name = #{creatorName},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="findAll" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM crm_task_allowauto_rules
+  </select>
+  <select id="search" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM crm_task_allowauto_rules
+    WHERE
+     1=1
+     <if test="storeCode!=null and storeCode!=''">
+       AND  store_code=#{storeCode}
+     </if>
+     <if test="dataSourceCode!=null and dataSourceCode!=''">
+       AND  data_source_code=#{dataSourceCode}
+     </if>
+     <if test="promoteCode!=null and promoteCode!=''">
+       AND  promote_code=#{promoteCode}
+     </if>
+    <if test="sort != null">
+      ORDER BY
+      <foreach collection="sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+  </select>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into crm_task_allowauto_rules(
+    store_code, data_source_code, promote_code, creator_id, creator_name, create_time
+    ) values
+    <foreach collection="list" index="idx" item="rules" separator=",">
+      (#{rules.storeCode},#{rules.dataSourceCode}, #{rules.promoteCode},#{rules.creatorId},
+      #{rules.creatorName},#{rules.createTime})
+    </foreach>
+  </insert>
+
+  <select id="getTaskAutomaticallyDistributed" resultType="java.lang.Long">
+    SELECT count(*) FROM  crm_task_allowauto_rules
+    WHERE  data_source_code=#{dataSourceCode}
+    AND promote_code=#{promoteCode} AND store_code=#{storeCode}
+  </select>
+
+
+  <select id="findAllThreeColumn" resultMap="BaseResultMap" >
+    SELECT
+    store_code, data_source_code, promote_code
+    FROM crm_task_allowauto_rules
+  </select>
+</mapper>

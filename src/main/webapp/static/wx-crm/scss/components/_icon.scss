@@ -1,0 +1,151 @@
+/*图标*/
+.addpeople{
+    position: absolute;
+    right: 0;
+    background: url("../img/addpeople.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+.add{
+    color: green;
+    font-size: 16px
+}
+.add1{
+    position: absolute;
+    right: 0;
+    background: url("../img/add.png");
+    width: 30px;
+    height: 30px;
+    display:inline-block;
+    background-size: 100% 100%;
+}
+.add2{
+    position: absolute;
+    left: 10px;
+    background: #fff;
+    width: 30px;
+    height: 30px;
+    display:inline-block;
+    background-size: 100% 100%;
+}
+.phone{
+    color: green;
+    font-size: 16px;
+    position: absolute;
+    left: 0;
+}
+.group{
+    background: url("../img/group.png");
+    width: 15px;
+    height: 15px;
+    display:block;
+    background-size: 100% 100%;
+}
+.close{
+    position: absolute;
+    left: 0;
+    background: url("../img/close.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+.close1{
+    position: absolute;
+    top:5px;
+    right: 35px;
+    background: url("../img/cancel.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+
+.send{
+    position: absolute;
+    top:0;
+    right: 0;
+    background: url("../img/send.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+    transform:rotate(80deg);
+}
+.return{
+    position: absolute;
+    top:10px;
+    left: 10px;
+    background: url("../img/return.png");
+    width: 25px;
+    height: 25px;
+    display: block;
+    background-size: 100% 100%;
+}
+.chat{
+    position: absolute;
+    top:0;
+    right: 0;
+    background: url("../img/chat.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+.cd-icon{
+    position: relative;
+    height: 30px;
+}
+.sad{
+    position: absolute;
+    top:0;
+    left: 50%;
+    background: url("../img/sad.png");
+    width: 30px;
+    margin-left: -15px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+.plus{
+    position: absolute;
+    top:5px;
+    right: 35px;
+    background: url("../img/plus.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+.feedback{
+    position: absolute;
+    top:5px;
+    right: 5px;
+    background: url("../img/feedback.png");
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: 100% 100%;
+}
+.feedback1{
+    position: absolute;
+    top:10px;
+    right: 10px;
+    background: url("../img/feedback.png");
+    width: 25px;
+    height: 25px;
+    display: block;
+    background-size: 100% 100%;
+}
+.find{
+    position: absolute;
+    bottom:5px;
+    right: 5px;
+    background: url("../img/find.png");
+    width: 33.3px;
+    height: 20px;
+    display: block;
+    background-size: 100% 100%;
+}

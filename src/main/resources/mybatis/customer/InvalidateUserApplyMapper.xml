@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.customer.InvalidateUserApplyDao">
+    <resultMap id="invalidateUserApplyResultMap" type="com.rocoinfo.entity.customer.InvalidateUserApply">
+        <id column="id" property="id"/>
+        <result column="apply_no" property="applyNo" />
+        <result column="apply_title" property="applyTitle" />
+        <result column="task_no" property="taskNo" />
+        <result column="customer_no" property="customerNo" />
+        <result column="apply_reson" property="applyReson" />
+        <result column="apply_user" property="applyUser" />
+        <result column="apply_user_name" property="applyUserName" />
+        <result column="approval_user" property="approvalUser" />
+        <result column="approval_result" property="approvalResult" />
+        <result column="apply_time" property="applyTime" />
+        <result column="approval_time" property="approvalTime" />
+        <result column="store" property="store" />
+        <result column="data_source" property="dataSource" />
+        <result column="customer_name" property="customerName" />
+        <result column="customer_mobile" property="customerMobile" />
+    </resultMap>
+
+    <sql id="baseSql">
+        ciua.id, ciua.apply_no, ciua.apply_title, ciua.task_no, ciua.customer_no, ciua.apply_reson, ce.emp_name as apply_user_name, ce.job_num as apply_user, ciua.approval_user, ciua.approval_result, ciua.apply_time, ciua.approval_time
+    </sql>
+
+    <select id="findDetailByApplyNo" resultMap="invalidateUserApplyResultMap">
+      SELECT
+      <include refid="baseSql" />
+        , ctd.store, ctd.data_source , cc.customer_name, cc.customer_mobile
+      FROM crm_invalidate_user_apply ciua
+        left join crm_task_distribute ctd on ctd.task_no = ciua.task_no
+        left join crm_customer cc on ciua.customer_no = cc.customer_no
+        left join crm_employee ce on ciua.apply_user = ce.job_num
+      WHERE apply_no = #{applyNo}
+    </select>
+
+    <insert id="insert" parameterType="InvalidateUserApply" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO crm_invalidate_user_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyNo != null">
+                apply_no,
+            </if>
+            <if test="applyTitle != null">
+                apply_title,
+            </if>
+            <if test="taskNo != null">
+                task_no,
+            </if>
+            <if test="customerNo != null">
+                customer_no,
+            </if>
+            <if test="applyReson != null">
+                apply_reson,
+            </if>
+            <if test="applyUser != null">
+                apply_user,
+            </if>
+            <if test="approvalUser != null">
+                approval_user,
+            </if>
+            <if test="approvalResult != null">
+                approval_result,
+            </if>
+            <if test="applyTime != null">
+                apply_time,
+            </if>
+            <if test="approvalTime != null">
+                approval_time
+            </if>
+        </trim>
+        <trim prefix=" VALUES (" suffixOverrides="," suffix=")">
+            <if test="applyNo != null">
+                #{applyNo},
+            </if>
+            <if test="applyTitle != null">
+                #{applyTitle},
+            </if>
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="customerNo != null">
+                #{customerNo},
+            </if>
+            <if test="applyReson != null">
+                #{applyReson},
+            </if>
+            <if test="applyUser != null">
+                #{applyUser},
+            </if>
+            <if test="approvalUser != null">
+                #{approvalUser},
+            </if>
+            <if test="approvalResult != null">
+                #{approvalResult},
+            </if>
+            <if test="applyTime != null">
+                #{applyTime},
+            </if>
+            <if test="approvalTime != null">
+                #{approvalTime}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="searchApplys" parameterType="map" resultType="map">
+        select * from (
+        select ciua.id, ciua.apply_no as applyNo, ciua.apply_title as applyTitle, ciua.apply_user AS applyUser, ciua.task_no as taskNo, ciua.apply_reson as applyReason, '0' as type
+        , date_format( ciua.apply_time, '%Y-%m-%d %T') as applyTime
+        , ce.emp_name as applyUserName
+        from crm_invalidate_user_apply ciua
+        left join crm_employee ce on ciua.apply_user = ce.job_num
+        where ciua.approval_user = #{mechandiser} and ciua.approval_time IS NULL
+        union
+        select cco.id, cco.apply_no as applyNo, cco.apply_title as applyTitle, cco.apply_user as applyUser,cco.task_no as taskNo, cco.back_reason as applyReason, '1' as type
+        , date_format( cco.apply_time, '%Y-%m-%d %T') as applyTime
+        , ce.emp_name as applyUserName
+        from crm_return_order cco
+        inner join crm_employee ce on cco.apply_user = ce.job_num
+        where ce.parent_id = #{mechandiser} and cco.approval_time IS NULL
+        ) tt order by applyTime desc
+    </select>
+
+    <update id="update" parameterType="InvalidateUserApply">
+        UPDATE crm_invalidate_user_apply
+        <set>
+            <if test="applyNo != null">
+                apply_no = #{applyNo},
+            </if>
+            <if test="applyTitle != null">
+                apply_title = #{applyTitle},
+            </if>
+            <if test="taskNo != null">
+                task_no = #{taskNo},
+            </if>
+            <if test="customerNo != null">
+                customer_no = #{customerNo},
+            </if>
+            <if test="applyReson != null">
+                apply_reson = #{applyReson},
+            </if>
+            <if test="applyUser != null">
+                apply_user = #{applyUser},
+            </if>
+            <if test="approvalUser != null">
+                approval_user = #{approvalUser},
+            </if>
+            <if test="approvalResult != null">
+                approval_result = #{approvalResult},
+            </if>
+            <if test="applyTime != null">
+                apply_time = #{applyTime},
+            </if>
+            <if test="approvalTime != null">
+                approval_time = #{approvalTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

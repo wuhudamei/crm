@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/views/admin/layouts/">
+  <excludes>
+    <pattern>/logout*</pattern>
+    <pattern>/wx*</pattern>
+  </excludes>
+
+  <decorator name="admin" page="signin.jsp">
+    <pattern>/</pattern>
+    <pattern>/index</pattern>
+    <pattern>/admin/*</pattern>
+  </decorator>
+</decorators>

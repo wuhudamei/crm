@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.customer.CustomerTaskRmkDao">
+    <insert id="insert" parameterType="CustomerTaskRmk" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO crm_custome_task_rmk
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerNo != null">
+                customer_no,
+            </if>
+            <if test="taskNo != null">
+                task_no,
+            </if>
+            <if test="newFlag != null">
+                new_flag,
+            </if>
+            <if test="currentStatus != null">
+                current_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="mechandiser != null">
+                mechandiser,
+            </if>
+            <if test="createUser != null">
+                create_user
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")"  suffixOverrides=",">
+            <if test="customerNo != null">
+                #{customerNo},
+            </if>
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="newFlag != null">
+                #{newFlag},
+            </if>
+            <if test="currentStatus != null">
+                #{currentStatus},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="mechandiser != null">
+                #{mechandiser},
+            </if>
+            <if test="createUser != null">
+                #{createUser}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByTaskNo" parameterType="CustomerTaskRmk">
+        UPDATE crm_custome_task_rmk
+        <set>
+            <if test="customerNo != null">
+                customer_no = #{customerNo},
+            </if>
+            <if test="taskNo != null">
+                task_no = #{taskNo},
+            </if>
+            <if test="newFlag != null">
+                new_flag = #{newFlag},
+            </if>
+            <if test="currentStatus != null">
+                current_status = #{currentStatus},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime}
+            </if>
+            <if test="mechandiser != null">
+                mechandiser = #{mechandiser},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser}
+            </if>
+        </set>
+        where id = #{id} or task_no = #{taskNo}
+    </update>
+
+    <select id="search" resultType="CustomerTaskRmk" parameterType="map">
+        SELECT id,
+            customer_no as customerNo,
+            task_no as taskNo,
+            new_flag as newFlag,
+            current_status as currentStatus,
+            create_time as createTime,
+            mechandiser,
+            create_user as createUser
+        FROM crm_custome_task_rmk
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="taskNo != null and taskNo != ''">
+                and task_no = #{taskNo}
+            </if>
+            <if test="newFlag != null and newFlag != ''">
+                and new_flag = #{newFlag}
+            </if>
+        </where>
+    </select>
+    <select id="getCustomerTaskRmkByTaskNo" resultType="CustomerTaskRmk">
+        SELECT id,
+            customer_no as customerNo,
+            task_no as taskNo,
+            new_flag as newFlag,
+            current_status as currentStatus,
+            create_time as createTime
+        FROM crm_custome_task_rmk
+        WHERE new_flag='1' AND
+        task_no=#{taskNo}
+    </select>
+</mapper>

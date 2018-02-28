@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.rocoinfo.repository.customer.CommunicateDao">
+    <resultMap id="communicateResultMap" type="com.rocoinfo.entity.customer.Communicate">
+        <id column="id" property="id"/>
+        <result column="customer_no" property="customerNo"/>
+        <result column="task_no" property="taskNo"/>
+        <result column="communicate_mode" property="communicateMode"/>
+        <result column="communicate_type" property="communicateType"/>
+        <result column="invalid_flag" property="invalidFlag"/>
+        <result column="invitation_store" property="invitationStore"/>
+        <result column="store_time" property="storeTime"/>
+        <result column="amont_room_time" property="amontRoomTime"/>
+        <result column="customer_intention" property="customerIntention"/>
+        <result column="customer_tag" property="customerTag"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+    </resultMap>
+
+	<!-- 关联字典表,拿沟通方式/类型名字 -->
+	<resultMap id="multiResultMap" type="com.rocoinfo.entity.customer.Communicate">
+        <id column="id" property="id"/>
+        <result column="customer_no" property="customerNo"/>
+        <result column="task_no" property="taskNo"/>
+        <result column="modeName" property="communicateMode"/>
+        <result column="typeName" property="communicateType"/>
+        <result column="invalid_flag" property="invalidFlag"/>
+        <result column="invitation_store" property="invitationStore"/>
+        <result column="store_time" property="storeTime"/>
+        <result column="amont_room_time" property="amontRoomTime"/>
+        <result column="customer_intention" property="customerIntention"/>
+        <result column="customer_tag" property="customerTag"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="createUserName" property="createUserName"/>
+    </resultMap>
+    
+    <sql id="communicateSql">
+        id, customer_no, task_no, communicate_mode, communicate_type, invalid_flag, invitation_store, store_time,
+        amont_room_time, customer_intention, customer_tag, remark, create_time, create_user
+    </sql>
+
+    <insert id="insert" parameterType="Communicate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO crm_communicate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerNo != null">
+                customer_no,
+            </if>
+            <if test="taskNo != null">
+                task_no,
+            </if>
+            <if test="communicateMode != null">
+                communicate_mode,
+            </if>
+            <if test="communicateType != null">
+                communicate_type,
+            </if>
+            <if test="invalidFlag != null">
+                invalid_flag,
+            </if>
+            <if test="invitationStore != null">
+                invitation_store,
+            </if>
+            <if test="storeTime != null">
+                store_time,
+            </if>
+            <if test="amontRoomTime != null">
+                amont_room_time,
+            </if>
+            <if test="customerIntention != null">
+                customer_intention,
+            </if>
+            <if test="customerTag != null">
+                customer_tag,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user
+            </if>
+        </trim>
+        <trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+            <if test="customerNo != null">
+                #{customerNo},
+            </if>
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="communicateMode != null">
+                #{communicateMode},
+            </if>
+            <if test="communicateType != null">
+                #{communicateType},
+            </if>
+            <if test="invalidFlag != null">
+                #{invalidFlag},
+            </if>
+            <if test="invitationStore != null">
+                #{invitationStore},
+            </if>
+            <if test="storeTime != null">
+                #{storeTime},
+            </if>
+            <if test="amontRoomTime != null">
+                #{amontRoomTime},
+            </if>
+            <if test="customerIntention != null">
+                #{customerIntention},
+            </if>
+            <if test="customerTag != null">
+                #{customerTag},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="createUser != null">
+                #{createUser}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Communicate">
+        UPDATE crm_communicate
+        <set>
+            <if test="customerNo != null">
+                customer_no = #{ customerNo },
+            </if>
+            <if test="taskNo != null">
+                task_no = #{ taskNo },
+            </if>
+            <if test="communicateMode != null">
+                communicate_mode = #{ communicateMode },
+            </if>
+            <if test="communicateType != null">
+                communicate_type = #{ communicateType },
+            </if>
+            <if test="invalidFlag != null">
+                invalid_flag = #{ invalidFlag },
+            </if>
+            <if test="invitationStore != null">
+                invitation_store = #{ invitationStore },
+            </if>
+            <if test="storeTime != null">
+                store_time = #{ storeTime },
+            </if>
+            <if test="amontRoomTime != null">
+                amont_room_time = #{ amontRoomTime },
+            </if>
+            <if test="customerIntention != null">
+                customer_intention = #{ customerIntention },
+            </if>
+            <if test="customerTag != null">
+                customer_tag = #{ customerTag },
+            </if>
+            <if test="remark != null">
+                remark = #{ remark },
+            </if>
+            <if test="createTime != null">
+                create_time = #{ createTime },
+            </if>
+            <if test="createUser != null">
+                create_user = #{ createUser }
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM crm_communicate WHERE id = #{id}
+    </delete>
+
+    <!--根据任务编号查询该任务沟通记录列表-->
+    <select id="findByTaskNo" parameterType="string" resultMap="communicateResultMap">
+        SELECT
+        <include refid="communicateSql" />
+        FROM crm_communicate WHERE task_no = #{taskNo} ORDER BY create_time DESC
+    </select>
+    
+    <!-- 通过customerNo查询 带条件/分页 的查询所有 -->
+	<select id="search" parameterType="map" resultMap="multiResultMap">
+		SELECT
+			com.id, com.customer_no, com.task_no, com.invalid_flag, 
+			com.invitation_store, com.store_time, com.amont_room_time, 
+			dic3.dic_name customer_intention, com.customer_tag, com.remark, com.create_time, 
+			dic1.dic_name modeName, dic2.dic_name typeName, emp.emp_name createUserName
+		FROM crm_communicate com
+		LEFT JOIN crm_dictionary dic1
+		ON com.communicate_mode = dic1.dic_code
+		LEFT JOIN crm_dictionary dic2
+		ON com.communicate_type = dic2.dic_code
+		LEFT JOIN crm_dictionary dic3
+		ON com.customer_intention = dic3.dic_code
+		LEFT JOIN crm_employee emp
+		ON emp.id = com.create_user
+		WHERE com.customer_no = #{customerNo}
+			<if test="communicateType != null">
+					AND com.communicate_type = #{communicateType}
+			</if>
+			<if test="communicateMode != null">
+					AND com.communicate_mode = #{communicateMode} 
+			</if>
+		<if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+	</select>
+    
+</mapper>

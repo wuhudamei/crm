@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的客户</title>
+    <link href="../static/css/lib.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <h3><i class="return"></i>新建沟通记录</h3>
+        </header>
+        <div class="content">
+            <div class="container">
+                <form class="nc-form">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">*沟通分类</label>
+                        <select class="form-control">
+                            <option>邀约</option>
+                        </select>
+                        
+                    </div>
+                    <div class="form-group has-error">
+                        <label for="exampleInputPassword1">*沟通类型</label>
+                        <select class="form-control">
+                            <option>预约量房</option>
+                        </select>
+                        <span id="helpBlock2" class="help-block">请选择沟通类型</span>
+                    </div>
+                    <div class="form-group ">
+                        <label for="exampleInputPassword1">无效客户</label><br>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 否
+                        </label>
+                    </div>
+                    <div class="form-group has-error">
+                        <label for="exampleInputPassword1">*邀约到店</label><br>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 否
+                        </label>
+                        <span id="helpBlock2" class="help-block">请选择是否邀约到店</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">到店时间</label><br>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">量房时间</label>
+                        <input type="date" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">客户意向</label>
+                        
+                        <select class="form-control">
+                            <option>深度意向</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">客户标签</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">*沟通内容</label>
+                        
+                        <textarea class="form-control">
+                        </textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">保存</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</body>

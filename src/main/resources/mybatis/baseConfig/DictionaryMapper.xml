@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 数据字典 -->
+<mapper namespace="com.rocoinfo.repository.basicConfig.DictionaryDao">
+    <resultMap id="BaseResultMap" type="Dictionary">
+        <id column="id" property="id"/>
+        <result column="dic_code" property="code"/>
+        <result column="dic_name" property="name"/>
+        <result column="parent_dic_id" property="parentId"/>
+        <result column="deleted" property="deleted"/>
+        <result column="sort" property="sort"/>
+        <result column="remark" property="remark"/>
+        <result column="parentName" property="parentName"/>
+    </resultMap>
+    <sql id="SelectInfo">
+        id, dic_code, dic_name, parent_dic_id, deleted, sort, remark
+    </sql>
+    
+    <!-- 查询所有未删除的:0 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT
+         <include refid="SelectInfo"/>
+        FROM crm_dictionary where deleted = '0'
+        ORDER BY sort
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="findAllWithDeleted" resultMap="BaseResultMap">
+        SELECT
+         <include refid="SelectInfo"/>
+        FROM crm_dictionary 
+        ORDER BY sort
+    </select>
+    
+    <!-- 通过code,并可按id排除;可用于校验code是否已经被使用了 -->
+    <select id="getByCode" resultMap="BaseResultMap">
+        select id
+        from crm_dictionary
+        where dic_code = #{code}
+		<if test="excludeDictId != null">
+			and id != #{excludeDictId}
+		</if>        
+    </select>
+    
+    <insert id="insert" parameterType="Dictionary" useGeneratedKeys="true" keyProperty="id">
+        insert into crm_dictionary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                dic_name,
+            </if>
+            <if test="code != null">
+                dic_code,
+            </if>
+            <if test="parentId != null">
+                parent_dic_id,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="remark != null">
+                remark
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<if test="name != null">
+                 #{name},
+            </if>
+            <if test="code != null">
+                 #{code},
+            </if>
+            <if test="parentId != null">
+                #{parentId},
+            </if>
+            <if test="deleted != null">
+                #{deleted},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="remark != null">
+                #{remark}
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="Dictionary">
+        update crm_dictionary
+        <set>
+            <if test="name != null">
+                dic_name = #{name},
+            </if>
+            <if test="code != null">
+                dic_code = #{code},
+            </if>
+            <if test="parentId != null">
+                parent_dic_id = #{parentId},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
+            </if>
+            <if test="sort != null">
+                sort = #{sort}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    
+    <select id="getById" resultMap="BaseResultMap" parameterType="long">
+        select dict1.id, dict1.dic_code, dict1.dic_name, dict1.parent_dic_id, 
+        	dict1.deleted, dict1.remark , dict1.sort, dict2.dic_name parentName
+        from crm_dictionary dict1 left join crm_dictionary dict2
+        on dict1.parent_dic_id = dict2.id
+        where dict1.id = #{id} and dict1.deleted = 0
+    </select>
+    
+    <!-- 通过id 查找子节点的个数 (查询未删除状态的) -->
+    <select id="countChildNodesById" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM crm_dictionary 
+        WHERE parent_dic_id = #{id} and deleted = '0'
+    </select>
+    
+    <!-- 逻辑删除数据字典对象-->
+    <update id="deleteById" parameterType="Dictionary">
+    	update crm_dictionary 
+    		set deleted = '1'
+    	where id = #{id}
+    </update>
+    
+	<!-- 根据code查询子类集合 -->
+    <select id="findSubDictListByCode" resultMap="BaseResultMap">
+        SELECT
+            a.dic_code,
+            a.dic_name
+        FROM
+            crm_dictionary a
+        JOIN crm_dictionary b ON a.parent_dic_id = b.id
+        WHERE
+            b.dic_code = #{dicCode}
+        AND a.deleted = '0'
+    </select>
+    
+    <!-- 根据dicCode查询本对象 -->
+    <select id="getDictionaryByCode" parameterType="String" resultMap="BaseResultMap">
+    	select 
+    	<include refid="SelectInfo"/>
+        FROM crm_dictionary where dic_code = #{code}
+    
+    </select>
+</mapper>

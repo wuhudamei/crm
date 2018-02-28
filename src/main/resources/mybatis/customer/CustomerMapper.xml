@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.customer.CustomerDao">
+
+    <resultMap id="customerResultMap" type="Customer">
+        <id column="id" property="id"/>
+        <result column="customer_no" property="customerNo"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_tag" property="customerTag"/>
+        <result column="customerTagName" property="customerTagName"/>
+        <result column="customer_mobile" property="customerMobile"/>
+        <result column="customer_idinord" property="custIdInOrder"/>
+        <result column="home_phone" property="homePhone"/>
+        <result column="reserve_mobile" property="reserveMobile"/>
+		<result column="customer_idinord" property="customerIdinord"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="current_status" property="customerTaskRmk.currentStatus"/>
+        <result column="ccrCreateTime" property="customerTaskRmk.createTime"/>
+        <result column="remark" property="communicate.remark"/>
+        <result column="ccCreateTime" property="communicate.createTime"/>
+    </resultMap>
+
+	<resultMap id="customerDetailResultMap" type="Customer" extends="customerResultMap">
+		<result column="introducer" property="taskDistribute.introducer" />
+		<result column="introducer_tel" property="taskDistribute.introducerTel" />
+		<result column="invitation_code" property="taskDistribute.invitationCode" />
+		<result column="task_store" property="taskDistribute.store" />
+		<result column="mechandiser" property="taskDistribute.mechandiser" />
+		<result column="task_status" property="taskDistribute.status" />
+		<result column="dic_name" property="taskDistribute.promoteSource"/>
+		<result column="remark" property="taskDistribute.remark"/>
+		<result column="task_level" property="taskDistribute.taskLevel" />
+		<result column="task_no" property="taskDistribute.taskNo" />
+	</resultMap>
+
+    <!-- 多表联查: 客户表/任务轨迹信息/任务派发,封装到CustomerVo中 -->
+    <resultMap id="multiResultMap" type="CustomerVo">
+		<id column="custId" property="id"/>
+        <result column="custNo" property="customerNo"/>
+        <result column="custName" property="customerName"/>
+        <result column="customer_tag" property="customerTag"/>
+        <result column="custMobile" property="customerMobile"/>
+        <result column="custCreateTime" property="createTime"/>
+        <result column="currentStatus" property="currentStatus"/>
+        <result column="task_level" property="taskLevel"/>
+    </resultMap>
+    
+    <sql id="customerSql">
+    	id, customer_no, customer_idinord, customer_name, customer_tag, customer_mobile, home_phone,
+    	 reserve_mobile, customer_idinord, create_time, update_time
+    </sql>
+    
+    <!-- 带条件/分页 的查询所有 -->
+	<select id="search" parameterType="map" resultMap="multiResultMap">
+		SELECT  custWithRmkGroup.custId, custWithRmkGroup.custNo, custWithRmkGroup.custName, 
+				custWithRmkGroup.custMobile, custWithRmkGroup.custIdInOrder,
+				custWithRmkGroup.custCreateTime, custWithRmkGroup.custUpdateTime, custWithRmkGroup.taskNo,
+				custWithRmkGroup.currentStatus,custWithRmkGroup.rmkCreateTime, dict.dic_name customer_tag, 
+				task.task_level, task.data_source, task.store
+		FROM 		
+	 	crm_task_distribute task
+		INNER JOIN
+			(SELECT custId, custNo, custName, customer_tag, custMobile, custIdInOrder, 
+				custCreateTime, custUpdateTime, taskNo, currentStatus, rmkCreateTime
+				FROM 
+					(SELECT cust.id custId, cust.customer_no custNo, cust.customer_name custName,cust.customer_tag,
+						cust.customer_mobile custMobile,cust.customer_idinord custIdInOrder,
+						cust.create_time custCreateTime, cust.update_time custUpdateTime, 
+						rmk.task_no taskNo , rmk.current_status currentStatus,
+						rmk.create_time rmkCreateTime
+					FROM crm_customer cust
+					LEFT JOIN crm_custome_task_rmk rmk
+					ON cust.customer_no = rmk.customer_no
+					WHERE rmk.new_flag = '1' 
+					ORDER BY rmkCreateTime DESC ) custWithRmk
+			GROUP BY custNo )  custWithRmkGroup
+		
+		ON task.task_no = custWithRmkGroup.taskNo
+		LEFT JOIN crm_dictionary dict
+		ON dict.dic_code = custWithRmkGroup.customer_tag
+		WHERE
+		 	task.data_source = #{dataSource} 
+		 	AND task.store = #{store}
+		 	<if test="keyword != null">
+		 		AND (
+			 			custWithRmkGroup.custName like CONCAT('%',#{keyword},'%')
+				 		OR custWithRmkGroup.custMobile = #{keyword}
+				 		OR custWithRmkGroup.custNo = #{keyword}
+			 		)
+       		 </if>
+			<if test="sort != null">
+	            ORDER BY
+	            <foreach collection="sort" item="order" separator=",">
+	                ${order.property} ${order.direction}
+	            </foreach>
+	        </if>
+	</select>
+	
+	<!-- 带条件/分页 的查询所有的总条数 -->
+	<select id="searchTotal" parameterType="map" resultType="Long">
+		SELECT  count(*)
+		FROM 		
+	 	crm_task_distribute task
+		INNER JOIN
+			(SELECT custId, custNo, custName, customer_tag, custMobile, custIdInOrder, 
+				custCreateTime, custUpdateTime, taskNo, currentStatus, rmkCreateTime
+				FROM 
+					(SELECT cust.id custId, cust.customer_no custNo, cust.customer_name custName,cust.customer_tag,
+						cust.customer_mobile custMobile,cust.customer_idinord custIdInOrder,
+						cust.create_time custCreateTime, cust.update_time custUpdateTime, 
+						rmk.task_no taskNo , rmk.current_status currentStatus,
+						rmk.create_time rmkCreateTime
+					FROM crm_customer cust
+					LEFT JOIN crm_custome_task_rmk rmk
+					ON cust.customer_no = rmk.customer_no
+					WHERE rmk.new_flag = '1' 
+					ORDER BY rmkCreateTime DESC ) custWithRmk
+			GROUP BY custNo )  custWithRmkGroup
+		
+		ON task.task_no = custWithRmkGroup.taskNo
+		LEFT JOIN crm_dictionary dict
+		ON dict.dic_code = custWithRmkGroup.customer_tag
+		WHERE
+		 	task.data_source = #{dataSource} 
+		 	AND task.store = #{store}
+		 	<if test="keyword != null">
+		 		AND (
+			 			custWithRmkGroup.custName like CONCAT('%',#{keyword},'%')
+				 		OR custWithRmkGroup.custMobile = #{keyword}
+				 		OR custWithRmkGroup.custNo = #{keyword}
+			 		)
+       		</if>
+	</select>
+	
+	<!-- 通过id查询客户信息 -->
+	<select id="getById" parameterType="Long" resultMap="customerResultMap">
+		select 
+		<include refid="customerSql"/>
+		from crm_customer where id = #{id}
+	</select>
+	
+	<!-- 通过客户编号查询客户信息 -->
+	<select id="getCustomerByCustomerNo" parameterType="String" resultMap="customerResultMap">
+		select 
+		cc.*,dict.dic_name AS customerTagName
+		from crm_customer cc
+		LEFT JOIN crm_dictionary dict
+		ON dict.dic_code = cc.customer_tag
+		where cc.customer_no = #{customerNo}
+	</select>
+
+	<select id="getCustomerByCustomerNoAndTaskNo"  resultMap="customerDetailResultMap">
+		select cc.*, ctd.store as task_store, ctd.invitation_code, ctd.introducer
+		, ctd.introducer_tel, ctd.status as task_status, ctd.task_level,ctd.mechandiser,ctd.task_no
+		,ctd.remark,cd.dic_name
+		from crm_task_distribute ctd
+		INNER JOIN crm_customer cc on ctd.customer_no = cc.customer_no
+		LEFT JOIN  crm_dictionary cd ON  cd.dic_code=ctd.promote_source
+		where ctd.task_no = #{taskNo} and ctd.customer_no = #{customerNo}
+	</select>
+	
+	<!-- 通过客户手机号查询客户信息 -->
+	<select id="getCustomerByMobileNo" parameterType="String" resultMap="customerResultMap">
+		select 
+		<include refid="customerSql"/>
+		from crm_customer where customer_mobile = #{cusMobile}
+	</select>
+	
+	<!-- 通过客户编码 更新客户信息 -->
+	<update id="update" parameterType="Customer" >
+		update crm_customer
+		 <set>
+            <if test="custIdInOrder != null">
+                customer_idinord = #{ custIdInOrder },
+            </if>
+            <if test="customerName != null">
+                customer_name = #{ customerName },
+            </if>
+			 <if test="customerTag != null">
+				 customer_tag = #{customerTag},
+			 </if>
+            <if test="customerMobile != null">
+                customer_mobile = #{ customerMobile },
+            </if>
+             <if test="homePhone != null">
+                 home_phone = #{ homePhone },
+             </if>
+             <if test="reserveMobile != null">
+                 reserve_mobile = #{ reserveMobile },
+             </if>
+            <if test="updateTime != null">
+                update_time = #{ updateTime }
+            </if>
+        </set>
+        WHERE customer_no = #{customerNo}
+	</update>
+
+	<insert id="insert" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
+		insert into crm_customer(customer_no,customer_name, customer_tag, customer_mobile,home_phone,
+		reserve_mobile,customer_idinord,create_time,update_time)
+		values(#{customerNo},#{customerName}, #{customerTag}, #{customerMobile},#{homePhone},#{reserveMobile},
+		#{custIdInOrder},now(),now())
+	</insert>
+	
+	
+	<!-- 批量插入客户 -->
+	<insert id="insertCustomerBatch">
+		insert into crm_customer(customer_no,customer_name,customer_mobile,home_phone,
+		reserve_mobile,customer_idinord,create_time,update_time,customer_tag) values
+		<foreach collection="newCusList" index="idx" item="newCus" separator=",">
+			(#{newCus.customerNo},#{newCus.customerName},#{newCus.customerMobile},#{newCus.homePhone},
+			#{newCus.reserveMobile},#{newCus.custIdInOrder},now(),now(),#{newCus.customerTag})
+		</foreach>
+	</insert>
+</mapper>

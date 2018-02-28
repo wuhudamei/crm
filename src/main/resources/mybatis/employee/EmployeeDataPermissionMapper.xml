@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.employee.EmployeeDataPermissionDao">
+    <resultMap id="BaseResultMap" type="EmployeeDataPermission">
+        <id column="id" property="id"/>
+        <result column="dic_name" property="name"/>
+        <result column="dic_code" property="code"/>
+        <result column="status" property="status"/>
+        <result column="module" property="module"/>
+        <result column="moduleCode" property="moduleCode"/>
+        <result column="checked" property="checked"/>
+    </resultMap>
+    <sql id="searchWhere">
+    </sql>
+    
+    <!-- 数据权限  查询数据字典表 -->
+    <select id="findDataPermissionByEmpId" resultMap="BaseResultMap">
+         SELECT DISTINCT
+            cdd.dic_code,cdd.dic_name,
+             cd.dic_name AS module,
+            cd.dic_code AS moduleCode,
+            CASE
+        WHEN cedp.id IS NOT NULL THEN
+            'true'
+        ELSE
+            'false'
+        END AS checked
+        FROM
+            crm_dictionary cd
+        JOIN crm_data_permission_param cdpp ON cd.dic_code = cdpp.dict_code
+        JOIN crm_dictionary cdd ON cdd.parent_dic_id = cd.id
+        LEFT JOIN crm_employee_data_permission cedp ON cedp.dic_code = cdd.dic_code
+        AND cedp.job_num = #{jobNum}
+        WHERE
+        cdd.deleted = '0'
+      </select>
+	
+	<!-- 数据权限  查询data_source表 -->
+    <select id="findDataPermissionByEmpIdWithDataSource" resultMap="BaseResultMap">
+        SELECT DISTINCT
+            cd.source_code dic_code, cd.source_name dic_name,
+            CASE
+        WHEN cepp.id IS NOT NULL THEN
+            'true'
+        ELSE
+            'false'
+        END AS checked
+        FROM
+            crm_data_source cd
+       LEFT JOIN crm_employee_data_permission cepp 
+       ON cd.source_code = cepp.dic_code AND cepp.job_num = #{jobNum}
+       WHERE
+         cd.status = '1'
+    </select> 
+      
+    <delete id="deleteByJobNum">
+        DELETE
+        FROM
+            crm_employee_data_permission
+        WHERE
+            job_num = #{jobNum}
+    </delete>
+    <insert id="batchAdd">
+        INSERT INTO crm_employee_data_permission
+        (permission_type,job_num,dic_code,create_time,create_user)
+        VALUES
+        <foreach collection="employeeDataPermissions" item="emp" separator=",">
+            (#{emp.moduleCode},#{jobNum},#{emp.code},#{createTime},#{createUser})
+
+        </foreach>
+
+    </insert>
+    <!-- 数据权限下拉框  查数据字典 -->
+    <select id="findEmpDataPermissionlist" resultMap="BaseResultMap">
+        SELECT
+            cedp.dic_code AS code ,
+            cd.dic_name AS name
+        FROM
+            crm_employee_data_permission cedp
+        JOIN
+            crm_dictionary cd
+        ON cedp.dic_code=cd.dic_code
+        WHERE
+            cedp.job_num = #{jobNum}
+        AND cedp.permission_type = #{permissionType}
+        AND cd.deleted = '0'
+        ORDER BY cd.sort 
+    </select>
+    
+     <!-- 数据权限下拉框  查数据来源表 -->
+    <select id="findEmpDataPermissionWithDataSource" resultMap="BaseResultMap">
+        SELECT
+            perm.dic_code AS CODE ,
+            sour.source_name AS NAME
+        FROM
+	    crm_employee_data_permission perm
+        JOIN
+             crm_data_source sour
+        ON  perm.dic_code = sour.source_code
+        WHERE
+            perm.job_num = #{jobNum}
+    </select>
+</mapper>

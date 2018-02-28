@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.order.OrderInfoDao">
+    <insert id="insert" parameterType="com.rocoinfo.entity.order.SyncOrderInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO crm_orderinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerNo != null">
+                customer_no,
+            </if>
+            <if test="taskNo != null">
+                task_no,
+            </if>
+            <if test="orderNum != null">
+                order_num,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="houseId != null">
+                house_id,
+            </if>
+            <if test="storeCode != null">
+                store_code,
+            </if>
+            <if test="depositFinish != null">
+                deposit_finish,
+            </if>
+            <if test="depositAbleback != null">
+                deposit_ableback,
+            </if>
+            <if test="depositAmount != null">
+                deposit_amount,
+            </if>
+            <if test="createTime != null">
+                create_time
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="customerNo != null">
+                #{customerNo},
+            </if>
+            <if test="taskNo != null">
+                #{taskNo},
+            </if>
+            <if test="orderNum != null">
+                #{orderNum},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="houseId != null">
+                #{houseId},
+            </if>
+            <if test="storeCode !=null">
+                #{storeCode},
+            </if>
+            <if test="depositFinish != null">
+                #{depositFinish},
+            </if>
+            <if test="depositAbleback != null">
+                #{depositAbleback},
+            </if>
+            <if test="depositAmount != null">
+                #{depositAmount},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateList">
+        <foreach collection="list" item="order" separator=";">
+            UPDATE crm_orderinfo
+            <set>
+                <if test="order.depositFinish != null">
+                    deposit_finish = #{order.depositFinish},
+                </if>
+                <if test="order.depositAbleback != null">
+                    deposit_ableback = #{order.depositAbleback},
+                </if>
+                <if test="order.depositAmount != null">
+                    deposit_amount = #{order.depositAmount},
+                </if>
+                <if test="order.depositTime != null">
+                    deposit_time = #{order.depositTime},
+                </if>
+                <if test="order.orderClosed != null">
+                    order_closed = #{order.orderClosed},
+                </if>
+                <if test="order.orderCloseTime != null">
+                    order_close_time = #{order.orderCloseTime},
+                </if>
+            </set>
+            WHERE id = #{order.id}
+        </foreach>
+    </update>
+
+
+    <update id="update" parameterType="SyncOrderInfo">
+        UPDATE crm_orderinfo
+        <set>
+            <if test="depositFinish != null">
+                deposit_finish = #{depositFinish},
+            </if>
+            <if test="depositAbleback != null">
+                deposit_ableback = #{depositAbleback},
+            </if>
+            <if test="depositAmount != null">
+                deposit_amount = #{depositAmount},
+            </if>
+            <if test="depositTime != null">
+                deposit_time = #{depositTime},
+            </if>
+            <if test="orderClosed != null">
+                order_closed = #{orderClosed},
+            </if>
+            <if test="orderCloseTime != null">
+                order_close_time = #{orderCloseTime},
+            </if>
+        </set>
+        WHERE order_id = #{orderId}
+    </update>
+
+
+    <select id="search" parameterType="map" resultType="SyncOrderInfo">
+      SELECT co.id, co.customer_no as customerNo, co.task_no as taskNo, co.order_num as orderNum, co.order_id as orderId, co.house_id as houseId, co.store_code as storeCode
+        , cc.customer_idinord as customerIdinord
+      from crm_orderinfo co
+      LEFT JOIN crm_customer cc on co.customer_no = cc.customer_no
+      where (deposit_finish = '0' or deposit_finish is null) and co.store_code = #{storeCode}
+      <if test="type == 'between'.toString()">
+          and co.create_time BETWEEN #{startTime} and #{endTime}
+      </if>
+    </select>
+</mapper>

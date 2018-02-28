@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.abnormalData.AbnormalDataDao">
+    <resultMap id="BaseResultMap" type="AbnormalData">
+        <id column="id" property="id"/>
+        <result column="abnormal_content" property="abnormalContent"/>
+        <result column="abnormal_type" property="abnormalType"/>
+        <result column="abnormalTypeName" property="abnormalTypeName"/>
+        <result column="source_code" property="sourceCode"/>
+        <result column="sourceName" property="sourceName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <sql id="SelectInfo">
+        ctd.id,
+        ctd.type AS abnormal_type,
+        concat(
+            cc.customer_name,
+            cc.customer_mobile
+        ) AS abnormal_content,
+        cds.source_code AS source_code,
+        cds.source_name AS sourceName,
+        ctd.create_time
+    </sql>
+
+    <sql id="searchWhere">
+        AND ctd.type!='INVITATION'
+        <if test="abnormalContent !=null and abnormalContent!=''">
+            AND  concat(
+            cc.customer_name,
+            cc.customer_mobile
+            ) LIKE CONCAT('%', #{abnormalContent}, '%')
+        </if>
+        <if test="abnormalType !=null and abnormalType!=''">
+            AND  ctd.type= #{abnormalType}
+        </if>
+        <if test="sourceCode !=null and sourceCode!=''">
+            AND   cds.source_code= #{sourceCode}
+        </if>
+        <if test="status !=null and status!=''">
+            AND  cad.status= #{status}
+        </if>
+    </sql>
+    <select id="search" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SelectInfo"/>
+        FROM
+        crm_task_distribute ctd
+        LEFT JOIN crm_customer cc ON ctd.customer_no = cc.customer_no
+        LEFT JOIN crm_data_source cds ON ctd.data_source = cds.source_code
+        WHERE 1=1
+        <include refid="searchWhere"/>
+        <if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

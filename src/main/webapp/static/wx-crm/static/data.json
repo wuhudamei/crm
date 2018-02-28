@@ -1,0 +1,26 @@
+{
+    "code": 1,
+    "personInfo": {
+        "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
+        "name": "刘聪",
+        "invitationCode": "BJ000100"
+    },
+    "dayStatistics": {
+        "toBeInvited": "20",
+        "hasBeenInvited": "20",
+        "receptionCustomer": "20",
+        "largeOrder": "12",
+        "smallOrder": "6",
+        "chargeback": "2",
+        "payAmount": "201.22",
+        "backAmount": "879.00"
+    },
+    "monthStatistics": {
+        "receptionCustomer": "20",
+        "largeOrder": "12",
+        "smallOrder": "6",
+        "chargeback": "2",
+        "payAmount": "201.22",
+        "backAmount": "879.00"
+    }
+}

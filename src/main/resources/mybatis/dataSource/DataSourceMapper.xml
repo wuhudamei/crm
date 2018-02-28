@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocoinfo.repository.dataSource.DataSourceDao">
+    <resultMap id="BaseResultMap" type="DataSource">
+        <id column="id" property="id"/>
+        <result column="source_name" property="sourceName"/>
+        <result column="source_code" property="sourceCode"/>
+        <result column="auto_distribute" property="autoDistribute"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+        <result column="call_id" property="callId"/>
+        <result column="call_secret" property="callSecret"/>
+    </resultMap>
+
+    <sql id="SelectInfo">
+    id, source_name, source_code,auto_distribute, status, create_time, update_time, remark,call_id,call_secret
+    </sql>
+
+    <sql id="searchWhere">
+        <if test="keyword !=null and keyword!=''">
+            AND ( source_name LIKE CONCAT('%', #{keyword}, '%')
+            OR source_code LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+    </sql>
+    <select id="search" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SelectInfo"/>
+        FROM crm_data_source
+        WHERE 1=1
+        <include refid="searchWhere"/>
+        <if test="sort != null">
+            ORDER BY
+            <foreach collection="sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+    </select>
+    <update id="update">
+        UPDATE crm_data_source
+        <set>
+        <if test="sourceName!=null and sourceName!='' ">
+            source_name=#{sourceName},
+        </if>
+        <if test="sourceCode!=null and sourceCode!='' ">
+            source_code=#{sourceCode},
+        </if>
+        <if test="autoDistribute!=null and autoDistribute!='' ">
+            auto_distribute=#{autoDistribute},
+        </if>
+        <if test="createTime!=null and createTime!='' ">
+            create_time=#{createTime},
+        </if>
+        <if test="updateTime!=null and updateTime!='' ">
+            update_time=#{updateTime},
+        </if>
+        <if test="remark!=null and remark!='' ">
+            remark=#{remark},
+        </if>
+        <if test="status!=null and status!='' ">
+            status=#{status}
+        </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SelectInfo"/>
+        FROM crm_data_source
+        WHERE
+        id=#{id}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO crm_data_source
+        (
+        <if test="sourceName!=null and sourceName!='' ">
+            source_name,
+        </if>
+        <if test="sourceCode!=null and sourceCode!='' ">
+            source_code,
+        </if>
+        <if test="autoDistribute!=null and autoDistribute!='' ">
+            auto_distribute,
+        </if>
+        <if test="createTime!=null and createTime!='' ">
+            create_time,
+        </if>
+        <if test="updateTime!=null and updateTime!='' ">
+            update_time,
+        </if>
+        <if test="remark!=null and remark!='' ">
+        remark,
+        </if>
+        <if test="status!=null and status!='' ">
+            status
+        </if>
+        ) VALUES (
+        <if test="sourceName!=null and sourceName!='' ">
+            #{sourceName},
+        </if>
+        <if test="sourceCode!=null and sourceCode!='' ">
+            #{sourceCode},
+        </if>
+        <if test="autoDistribute!=null and autoDistribute!='' ">
+            #{autoDistribute},
+        </if>
+        <if test="createTime!=null and createTime!='' ">
+            #{createTime},
+        </if>
+        <if test="updateTime!=null and updateTime!='' ">
+            #{updateTime},
+        </if>
+        <if test="remark!=null and remark!='' ">
+            #{remark},
+        </if>
+        <if test="status!=null and status!='' ">
+            #{status}
+        </if>
+        )
+
+
+    </insert>
+    <select id="findAll"  resultMap="BaseResultMap">
+        SELECT  <include refid="SelectInfo"/>
+        FROM crm_data_source
+    </select>
+    
+    
+    <!-- 根据调用者id查询数据来源配置 -->
+	<select id="getDataSourceByCallId"  resultMap="BaseResultMap">
+		SELECT  <include refid="SelectInfo"/>
+        FROM crm_data_source where call_id = #{callId}
+	</select>
+	
+	
+	<!-- 根据来源编号查询数据来源配置 -->
+	<select id="getDataSourceByCode" resultMap="BaseResultMap">
+		SELECT  <include refid="SelectInfo"/>
+        FROM crm_data_source where source_code = #{dsCode}
+	</select>
+</mapper>

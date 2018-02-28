@@ -1,0 +1,234 @@
+//我的客户
+.mine-list{
+    background: #fff;
+    .list-group-item{
+        border:none;
+    }
+    >p{
+        text-align: center;
+        padding:30px 0 20px 0;
+        a{
+            color: #53714f;
+        }
+    }
+    li{
+        border-bottom:1px solid #eee;
+        padding:8px 0;
+        h4{
+            clear: both;
+            margin-bottom: 8px;
+            small{
+                background: #cceecc;
+                margin-left: 3px;
+            }
+            span{
+                float: right;
+
+                position: relative;
+                padding-left: 22px;
+                float: right;
+                // font-size: 14px;
+                font-size: 16px;
+                color: #000;
+                a{
+                    color: #000
+                }
+                >i{
+                    position: absolute;
+                    top:0px;
+                    left: 0;
+                }
+            }
+        }
+        p{
+            clear: both;
+            position: relative;
+            padding-left: 17px;
+            >i{
+                position: absolute;
+                top:2px;
+                left: 0;
+            }
+            span{
+                font-size: 12px;
+                color: #999;
+                // position: relative;
+                // padding-left: 22px;
+                float: right;
+                // font-size: 14px;
+                // font-size: 16px;
+                // color: #999;
+                // >i{
+                //     position: absolute;
+                //     top:2px;
+                //     left: 0;
+                // }
+            }
+            span.ellipsis{
+                float: left;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100px;
+                line-height: 18px;
+                overflow: hidden;
+            }
+        }
+    }
+}
+//客户详情
+.col-xs-3,.col-xs-9,.col-xs-4,.col-xs-8,.col-xs-5,.col-xs-7{
+    padding-left:3px;
+    padding-right:3px;
+}
+.cd-content{
+    position: relative;
+}
+.cd-main{
+    border-top:2px solid #555;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+    margin-bottom: 10px;
+    overflow-y: scroll;
+    h4{
+        height: 30px;
+        line-height: 30px;
+        padding-left: 3px;
+    }
+    .home-title{
+        overflow: hidden;
+        border-bottom: 1px solid #ddd;
+        clear: both;
+        height: 36px;
+        padding-left: 10px;
+        dt{
+            float: left;
+            margin-top:3px;
+            img{
+                width: 30px;
+                height: 30px;
+            }
+        }
+        dd{
+            float: left;
+            margin-top:3px;
+            margin-left: 5px;
+            p{
+                color: #bbb;
+                font-size: 12px;
+            }
+        }
+    }
+    .home-state{
+        position: absolute;
+        top:10px;
+        right: 10px;
+        color: #5cc592;
+    }
+    .order-btn {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        background: green;
+        padding: 3px;
+        color: #fff;
+    }
+    .cd-con{
+        padding:15px 0;
+        overflow: hidden;
+    }
+    .cd-list{
+        li{
+            p{
+                padding-left: 0;
+                color: #888;
+            }
+        }
+    }
+}
+//编辑订单
+.no-content{
+    h4{
+        border-bottom:1px solid #bbb;
+        background: #fff;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 15px;
+    }
+}
+/*订单详情*/
+.cancle{
+    float: right;
+    text-align: center;
+}
+.cancle img{
+    width: 30px;
+    height: 30px;
+}
+/*退单申请*/
+.aw-content{
+    h4{
+        border-bottom:1px solid #bbb;
+        background: #fff;
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 15px;
+    }
+}
+
+.mine-person{
+    text-align: center;
+    .avatar{
+        border-radius: 50%;
+    }
+}
+/*标签列表*/
+.lebal-content{
+    background: #fff;
+    margin-top:10px;
+    .lebal-text{
+        border-bottom: 1px solid #eee;
+        line-height: 30px;
+        clear: both;
+        .lebal-tag{
+            font-size: 18px;
+            padding-left: 0;
+        }
+        .lebal-name{
+            float: right;
+        }
+    }
+}
+
+// 联系人列表
+.list-concat
+{
+    display: flex;
+    >span{
+        flex:1
+    }
+    >span:last-child{
+        text-align: right;
+    }
+}
+.h-title {
+    background: #578f6e !important
+}
+
+//状态
+.statusMark {
+    border: 1px solid red;
+    border-radius: 50%;
+    padding: 5px;
+    background: #fff;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: red;
+    font-size: 18px;
+    white-space: nowrap;
+}
+.relative {
+    position: relative !important
+}

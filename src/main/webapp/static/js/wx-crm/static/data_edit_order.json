@@ -1,0 +1,16 @@
+{
+    "code": 1,
+    "orderInfo": {
+        "id": "2",
+        "packageType": "1099",
+        "amountRoomTime": "2017-06-13 10:26",
+        "activityName": "1099拎包入住",
+        "discountName": "1099折扣",
+        "repairCost": "2000",
+        "distanceCost": "200",
+        "carryCost": "200",
+        "budgetAmount": "3300",
+        "advance": "1000",
+        "note": ""
+    }
+}

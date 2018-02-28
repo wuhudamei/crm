@@ -1,0 +1,29 @@
+.mine-tab{
+    margin:10px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    li{
+        flex:1;
+        display: inline;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #fff;
+        // margin:0 3px;
+        border-radius:3px;
+        // border:1px solid green;
+        &.active{
+            background: green;
+            a{
+                color: #fff;
+            }
+        }
+        a{
+            color: #333;
+            font-size: 12px;
+            display: inline-block;
+            width: 100%;
+        }
+    }
+}
